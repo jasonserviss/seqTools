@@ -14,10 +14,25 @@ NULL
 #' @export
 
 cpm <- function(counts) {
-    norm.fact <- colSums(counts)
-    counts.cpm <- t(apply(counts, 1, .norm, n = norm.fact))
+    t(t(counts) / colSums(counts) * 10^6 + 1)
 }
 
-.norm <- function(x, n) {
-    x / n * 1000000 + 1
+#' Rescale features
+#'
+#' Rescales each matrix row to the interval [0, 1].
+#'
+#' @name rescaleFeatures
+#' @rdname rescaleFeatures
+#' @aliases rescaleFeatures
+#' @param counts matrix; a numeric matrix of counts.
+#' @return The rescaled matrix.
+#' @author Jason T. Serviss
+NULL
+
+#' @export
+
+rescaleFeatures <- function(counts) {
+  t(apply(counts, 1, function(x){
+    (x - min(x)) / (max(x) - min(x))
+  }))
 }
