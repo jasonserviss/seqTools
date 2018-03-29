@@ -56,3 +56,34 @@ nTopMax <- function(cpm, n) {
   select <- order(rv, decreasing = TRUE)[1:n]
   return(select)
 }
+
+#' foldChangePerClass
+#'
+#' Calculates fold change for each gene with each class vs all other classes.
+#'
+#' @name foldChangePerClass
+#' @rdname foldChangePerClass
+#' @author Jason T. Serviss
+#' @param counts The matrix holding expression values.
+#' @param class A tibble with columns \emph{class} and \emph{sample} indicating
+#'    the class and sample ID respectivley.
+#' @keywords foldChangePerClass
+#'
+#'
+#' @export
+#' @importFrom tibble tibble
+NULL
+
+foldChangePerClass <- function(counts, classes) {
+  uGroups <- unique(classes$class)
+  
+  res <- sapply(1:length(uGroups), function(x) {
+    samplesA <- filter(classes, class == uGroups[x])$sample
+    samplesB <- filter(classes, class != uGroups[x])$sample
+    a <- rowMeans(counts[, colnames(counts) %in% samplesA])
+    b <- rowMeans(counts[, colnames(counts) %in% samplesB])
+    a/b
+  })
+  colnames(res) <- uGroups
+  return(res)
+}
