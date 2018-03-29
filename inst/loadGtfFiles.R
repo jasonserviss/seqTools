@@ -7,7 +7,7 @@ colnames <- c(
 )
 
 colclasses <- c(
-    rep("character", 3)
+    rep("character", 3),
     rep("numeric", 2),
     rep("character", 4)
 )
