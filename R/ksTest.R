@@ -137,6 +137,7 @@ KStest <- function(
   
   #find all combinations of unique classes
   n <- combn(uc, 2)
+  n <- apply(n, 2, sort)
   cmbNames <- paste(n[1, ], n[2, ], sep = "-")
   colnames(n) <- cmbNames
   n <- as.data.frame(n)
@@ -227,8 +228,8 @@ processKStest <- function(results, classes, alpha) {
 .processResults <- function(results, currClass, alpha) {
   results %>%
     dplyr::filter(
-      str_replace(.data$combination, "(.*)-.*", "\\1") == currClass |
-      str_replace(.data$combination, ".*-(.*)", "\\1") == currClass
+      stringr::str_replace(.data$combination, "(.*)-.*", "\\1") == currClass |
+      stringr::str_replace(.data$combination, ".*-(.*)", "\\1") == currClass
     ) %>%
     dplyr::group_by(.data$gene) %>%
     dplyr::summarize(
