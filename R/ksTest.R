@@ -102,8 +102,7 @@ my.ks.test <- function (x, y, check = FALSE, ...){
 #' @export
 #' @importFrom parallel mclapply
 #' @importFrom tibble as_tibble
-#' @importFrom dplyr bind_rows
-#' @importFrom magrittr "%>%"
+#' @importFrom dplyr bind_rows "%>%"
 #' @importFrom purrr map2_dfr
 #' @importFrom stats setNames
 #' @importFrom utils combn

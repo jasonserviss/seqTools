@@ -13,9 +13,10 @@ Suggests:
     testthat
 Imports: 
     dplyr,
-    magrittr,
     purrr,
     tibble,
     stringr,
     rlang,
-    matrixStats
+    matrixStats,
+    parallel,
+    e1071

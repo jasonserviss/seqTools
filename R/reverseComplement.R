@@ -1,8 +1,3 @@
-
-revComp <- function(sequence) {
-  as.character(Biostrings::reverseComplement(Biostrings::DNAStringSet(sequence)))
-}
-
 #test
 sequence <- c("A", "T", "G", "C")
 revComp(sequence)

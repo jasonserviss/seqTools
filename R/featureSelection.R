@@ -78,6 +78,7 @@ nTopMax <- function(cpm, n) {
 NULL
 
 #' @importFrom e1071 svm
+#' @importFrom matrixStats rowMeans2 rowSds
 
 nTopDeltaCV <- function(counts, n) {
   valid <- matrixStats::rowSums2(counts) > 0
@@ -112,6 +113,9 @@ nTopDeltaCV <- function(counts, n) {
 #'
 #' @export
 #' @importFrom tibble tibble
+#' @importFrom dplyr filter
+#' @importFrom matrixStats rowMeans2
+
 NULL
 
 foldChangePerClass <- function(counts, classes) {
@@ -120,8 +124,8 @@ foldChangePerClass <- function(counts, classes) {
   res <- sapply(1:length(uGroups), function(x) {
     samplesA <- filter(classes, class == uGroups[x])$sample
     samplesB <- filter(classes, class != uGroups[x])$sample
-    a <- rowMeans(counts[, colnames(counts) %in% samplesA])
-    b <- rowMeans(counts[, colnames(counts) %in% samplesB])
+    a <- rowMeans2(counts[, colnames(counts) %in% samplesA])
+    b <- rowMeans2(counts[, colnames(counts) %in% samplesB])
     a/b
   })
   colnames(res) <- uGroups
