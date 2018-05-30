@@ -7,14 +7,13 @@ revComp <- function(sequence) {
 sequence <- c("A", "T", "G", "C")
 revComp(sequence)
 
-#probably faster with
+#even faster with
 revComp2 <- function(sequence) {
-  dplyr::case_when(
-    sequence == "A" ~ "T",
-    sequence == "T" ~ "A",
-    sequence == "G" ~ "C",
-    sequence == "C" ~ "G"
-  )
+  model <- c("A", "a", "T", "t", "G", "g", "C", "c")
+  names(model) <- c("T", "t", "A", "a", "C", "c", "G", "g")
+  comp <- names(model)[match(strsplit(sequence, character())[[1]], model)]
+  revComp <- rev(comp)
+  paste(revComp, collapse = "")
 }
 
 revComp2(sequence)
