@@ -91,7 +91,7 @@ my.ks.test <- function (x, y, check = FALSE, ...){
 #' @aliases KStest
 #' @param counts Matrix; counts matrix with samples as columns and genes as rows.
 #'  Should have both colnames and rownames.
-#' @param classes Character; vector with length ncol(exp) indicating the class
+#' @param classes Character; vector with length ncol(counts) indicating the class
 #'  of each sample.
 #' @param cores Numeric; indicates the number of cores to run the analysis on.
 #' @return A tibble with one row per gene and class combination and the
