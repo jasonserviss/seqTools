@@ -233,7 +233,9 @@ processKStest <- function(results, classes, alpha) {
     dplyr::group_by(.data$gene) %>%
     dplyr::summarize(
       sigBool = all(.data$p.value < alpha),
-      statSum = sum(.data$stat)
+      statSum = sum(.data$stat),
+      p.values = list(.data$p.value),
+      statistics = list(.data$stat)
     )
 }
 
