@@ -1,8 +1,3 @@
-#test
-sequence <- c("A", "T", "G", "C")
-revComp(sequence)
-
-#even faster with
 revComp2 <- function(sequence) {
   model <- c("A", "a", "T", "t", "G", "g", "C", "c")
   names(model) <- c("T", "t", "A", "a", "C", "c", "G", "g")
@@ -10,5 +5,3 @@ revComp2 <- function(sequence) {
   revComp <- rev(comp)
   paste(revComp, collapse = "")
 }
-
-revComp2(sequence)
