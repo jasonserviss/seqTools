@@ -10,7 +10,7 @@ KStest(counts, classes, cores = 4)
 \item{counts}{Matrix; counts matrix with samples as columns and genes as rows.
 Should have both colnames and rownames.}
 
-\item{classes}{Character; vector with length ncol(exp) indicating the class
+\item{classes}{Character; vector with length ncol(counts) indicating the class
 of each sample.}
 
 \item{cores}{Numeric; indicates the number of cores to run the analysis on.}

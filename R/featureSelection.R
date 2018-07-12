@@ -95,7 +95,70 @@ nTopDeltaCV <- function(counts, n) {
   score <- log2_cv - predict(modelsvm, log2_m)
   score <- score * valid[ok]
   names(score) <- rownames(counts)[ok]
-  sort(score, decreasing = TRUE)[1:n]
+  s <- sort(score, decreasing = TRUE)[1:n]
+  which(rownames(counts) %in% names(s))
+}
+
+#' recursiveFE
+#'
+#' Recursive Feature Elimination; First, the algorithm fits the model to all
+#' predictors. Each predictor is ranked using it’s importance to the model. Let
+#' S be a sequence of ordered numbers which are candidate values for the number
+#' of predictors to retain (S1 > S2, …). At each iteration of feature selection,
+#' the Si top ranked predictors are retained, the model is refit and performance
+#' is assessed. The value of Si with the best performance is determined and the
+#' top Si predictors are used to fit the final model.
+#'
+#' @name recursiveFE
+#' @rdname recursiveFE
+#' @author Jason T. Serviss
+#' @param cpm Matrix; Matrix containing cpm values.
+#' @param classes Character; classifications corresponding to the cpm columns.
+#' @param nCV Integer; Number of cross-fold validations.
+#' @param s Numeric; Vector indicating the number of features to select in
+#' each testing round.
+#' @keywords recursiveFE
+#'
+#'
+#' @export
+NULL
+
+#' @importFrom caret rfeControl rfe predictors
+
+recursiveFE <- function(cpm, classes, nCV = 10, s) {
+  normalized <- scale(cpm, center = TRUE, scale = TRUE)
+  control <- rfeControl(functions = rfFuncs, method = "cv", number = nCV)
+  results <- rfe(
+    as.data.frame(t(normalized)),
+    as.factor(classes),
+    sizes = s,
+    rfeControl = control
+  )
+  p <- predictors(results)
+  which(rownames(cpm) %in% p)
+}
+
+#' findHighlyCorrelated
+#'
+#' Identifies genes with a level of correlation greater than a specified cutoff.
+#' Returns indexes of all genes that are NOT correlated > the specified cutoff.
+#'
+#' @name findHighlyCorrelated
+#' @rdname findHighlyCorrelated
+#' @author Jason T. Serviss
+#' @param cpm Matrix; Matrix containing cpm values.
+#' @param cut Integer; Genes with a correlation > cut will be reported.
+#' @keywords recursiveFE
+#' @export
+NULL
+
+#' @importFrom caret findCorrelation
+
+findHighlyCorrelated <- function(cpm, cut) {
+  correlationMatrix <- cor(t(cpm))
+  hc <- findCorrelation(correlationMatrix, cutoff = cut)
+  n <- 1:nrow(cpm)
+  n[!n %in% hc]
 }
 
 #' foldChangePerClass
@@ -129,6 +192,7 @@ foldChangePerClass <- function(counts, classes) {
     a/b
   })
   colnames(res) <- uGroups
+  rownames(res) <- rownames(counts)
   return(res)
 }
 
