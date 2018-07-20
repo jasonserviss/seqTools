@@ -150,5 +150,5 @@ NULL
 
 pearsonsCor <- function(cpm, select = NULL) {
   if(is.null(select)) select <- 1:nrow(cpm)
-  as.dist(1 - cor(cpm[select, ],method = "p"))
+  as.dist(1 - cor(cpm[select, ], method = "p"))
 }

@@ -54,3 +54,40 @@ matrix_to_tibble <- function(data, rowname = "rowname") {
   rownames_to_column(var = rowname) %>%
   as_tibble()
 }
+
+#' tidySessionInfo
+#'
+#' sessionInfo as a tidy tibble
+#'
+#' @name tidySessionInfo
+#' @rdname tidySessionInfo
+#' @author Jason T. Serviss
+#' @examples
+#' tidySessionInfo()
+#'
+#' @export
+#' @importFrom tibble as_tibble rownames_to_column
+
+tidySessionInfo <- function() {
+  l <- sessionInfo()
+  svs <- bind_cols(
+    R.version = l[[1]], platform = l[[2]], locale = l[[3]],
+    running = l[[4]], matprod = l[[8]], BLAS = l[[9]],
+    LAPACK = l[[10]]
+  ) %>% gather(var, value)
+  
+  basePkgs <- tibble(
+    var = rep("package_basePkgs", length(l[[5]])),
+    value = l[[5]]
+  )
+  otherPkgs <- tibble(
+    var = rep("package_otherPkgs", length(l[[6]])),
+    value = names(l[[6]])
+  )
+  loadedOnly <- tibble(
+    var = rep("package_loadedOnly"),
+    value = names(l[[7]])
+  )
+  
+  bind_rows(svs, basePkgs, otherPkgs, loadedOnly)
+}
