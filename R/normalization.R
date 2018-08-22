@@ -14,7 +14,7 @@ NULL
 #' @export
 
 cpm <- function(counts) {
-    t(t(counts) / colSums(counts) * 10^6 + 1)
+    t(t(counts) / colSums(counts) * 10^6)
 }
 
 #' Rescale features

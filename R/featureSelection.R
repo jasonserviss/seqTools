@@ -80,8 +80,8 @@ NULL
 #' @importFrom e1071 svm
 #' @importFrom matrixStats rowMeans2 rowSds
 
-nTopDeltaCV <- function(counts, n) {
-  valid <- matrixStats::rowSums2(counts) > 0
+nTopDeltaCV <- function(counts, n, rm = 0) {
+  valid <- matrixStats::rowSums2(counts) > rm
   mu <- matrixStats::rowMeans2(counts)
   sd <- matrixStats::rowSds(counts)
   ok <- mu > 0 & sd > 0
@@ -96,7 +96,7 @@ nTopDeltaCV <- function(counts, n) {
   score <- score * valid[ok]
   names(score) <- rownames(counts)[ok]
   s <- sort(score, decreasing = TRUE)[1:n]
-  which(rownames(counts) %in% names(s))
+  match(names(s), rownames(counts))
 }
 
 #' recursiveFE
@@ -123,11 +123,11 @@ nTopDeltaCV <- function(counts, n) {
 #' @export
 NULL
 
-#' @importFrom caret rfeControl rfe predictors
+#' @importFrom caret rfeControl rfe predictors rfFuncs
 
 recursiveFE <- function(cpm, classes, nCV = 10, s) {
   normalized <- scale(cpm, center = TRUE, scale = TRUE)
-  control <- rfeControl(functions = rfFuncs, method = "cv", number = nCV)
+  control <- rfeControl(functions = caret::rfFuncs, method = "cv", number = nCV)
   results <- rfe(
     as.data.frame(t(normalized)),
     as.factor(classes),

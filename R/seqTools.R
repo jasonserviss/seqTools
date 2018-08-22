@@ -1,10 +1,10 @@
-#' \code{seqTools} package
+#' \code{scSeqTools} package
 #'
 #' RNA sequencing tools.
 #'
 #'
 #' @docType package
-#' @name seqTools
+#' @name scSeqTools
 #' @importFrom rlang .data
 #' @importFrom dplyr "%>%"
 NULL
