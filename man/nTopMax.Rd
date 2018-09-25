@@ -2,7 +2,6 @@
 % Please edit documentation in R/featureSelection.R
 \name{nTopMax}
 \alias{nTopMax}
-\alias{nTopMax}
 \title{nTopMax}
 \usage{
 nTopMax(cpm, n)
