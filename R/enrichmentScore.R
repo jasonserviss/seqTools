@@ -21,10 +21,14 @@ NULL
 #' @importFrom matrixStats rowMeans2
 #' @importFrom future.apply future_lapply
 #' @export
-#' 
+
 enrichmentScore <- function(cpm, classes, e1 = 0.1, e2 = 0.01) {
+  
+  if(!is.character(classes)) stop("classes arg should be a character vector")
+  options(future.globals.maxSize = +Inf)
+  
   uClasses <- unique(classes)
-  e <- future_lapply(1:length(uClasses), FUN = function(i) {
+  scores <- future_lapply(1:length(uClasses), FUN = function(i) {
     currClass <- uClasses[i]
     
     #get cluster samples
@@ -43,7 +47,9 @@ enrichmentScore <- function(cpm, classes, e1 = 0.1, e2 = 0.01) {
     
     #calculate enrichment
     e <- ((f + e1) / (fj + e1)) * ((u + e2) / (uj + e2))
-    sort(e, decreasing = TRUE)
+    e <- sort(e, decreasing = TRUE)
+    e
   })
-  names(e) <- uClasses
+  names(scores) <- uClasses
+  scores
 }
