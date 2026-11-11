@@ -11,6 +11,10 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
+Imports: 
+    tibble,
+    dplyr,
+    tidyr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: R (>= 4.6)
