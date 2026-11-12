@@ -112,3 +112,29 @@ matrix_to_tibble <- function(data, rowname = "rowname", drop = FALSE) {
 #
 #   bind_rows(svs, basePkgs, otherPkgs, loadedOnly)
 # }
+
+#' divide_by
+#'
+#' Facilitates division in pipes and "avoids wrong number of arguments to"
+#' complaint by check. Adopted from magrittr:
+#' \url{https://github.com/tidyverse/magrittr/blob/master/R/aliases.R#L93-L96}
+#'
+#' @name divide_by
+#' @rdname divide_by
+#' @author Jason T. Serviss
+#' @export
+
+divide_by <- `/`
+
+#' multiply_by
+#'
+#' Facilitates multiplication in pipes and "avoids wrong number of arguments to"
+#' complaint by check. Adopted from magrittr:
+#' \url{https://github.com/tidyverse/magrittr/blob/master/R/aliases.R#L82-L85}
+#'
+#' @name multiply_by
+#' @rdname multiply_by
+#' @author Jason T. Serviss
+#' @export
+
+multiply_by <- `*`

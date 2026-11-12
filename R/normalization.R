@@ -37,3 +37,4 @@ rescaleFeatures <- function(counts) {
     (x - min(x)) / (max(x) - min(x))
   }))
 }
+
