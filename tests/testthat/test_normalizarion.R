@@ -1,5 +1,3 @@
-context("Normalization methods")
-
 
 ##run test
 test_that("check that the cpm function returns the correct output", {

@@ -4,6 +4,7 @@ Version: 0.0.0.9000
 Authors@R: c(person("Jason T.", "Serviss", email = "jason.t.serviss@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-5778-7014")))
 Description: What the package does (one paragraph).
 License: GPL (>= 3)
+Config/testthat/edition: 3
 Config/roxygen2/version: 8.1.1
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -15,6 +16,5 @@ Imports:
     tibble,
     dplyr,
     tidyr
-Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: R (>= 4.6)
