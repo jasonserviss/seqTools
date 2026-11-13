@@ -1,0 +1,5 @@
+SingleR is an automated, reference-based cell type annotation method for single-cell RNA sequencing (scRNA-seq) data. It works by comparing the gene expression profile of each individual test cell against pure, pre-labeled reference datasets.
+
+Tabula Muris consortium datasets
+
+supervised dim red CellMentor: https://www.nature.com/articles/s41467-025-67088-7
