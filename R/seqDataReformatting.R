@@ -1,72 +1,73 @@
 
-#' moveGenesToRownames
+#' move.genes.to.rownames
 #'
 #' Moves the first column of the counts data.frame to rownames and removes
 #' the old column.
 #'
-#' @name moveGenesToRownames
-#' @rdname moveGenesToRownames
-#' @param counts data.frame; A data frame with counts data.
+#' @name move.genes.to.rownames
+#' @rdname move.genes.to.rownames
+#' @param counts data.frame; A data frame with scRNAseq counts data.
 #' @return The counts data.frame is returned with the first column moved to
 #' the rownames of the data.frame.
 #' @author Jason Serviss
 #' @examples
 #'
 #' counts <- data.frame(LETTERS, a = runif(26, 1, 100))
-#' moveGenesToRownames(counts)
+#' move.genes.to.rownames(counts)
 #'
 NULL
 #' @export
 
-moveGenesToRownames <- function(counts) {
+move.genes.to.rownames <- function(counts) {
   if(!length(dim(counts))) {
     stop("dim(counts) must have a positive length.")
   }
-  if(class(counts) != "data.frame") {
+  if(!is.data.frame(counts)) {
     stop("Counts is not a data.frame")
   }
-  if((class(counts[[1]]) != "character") & (class(counts[[1]]) != "factor")) {
-    stop("The first column of counts is not class character or class factor.")
+  if(!is.character(counts[[1]])) {
+    stop("The first column of counts is not class character.")
   }
   rownames(counts) <- counts[[1]]
   counts[[1]] <- NULL
   return(counts)
 }
 
-#' convertCountsToMatrix
+#' convert.counts.to.matrix
 #'
-#' Coerces the counts data.frame into a matrix.
+#' Coerces the counts data.frame into a matrix and runs some basic checks before doing so.
 #'
-#' @name convertCountsToMatrix
-#' @rdname convertCountsToMatrix
-#' @param counts data.frame; A data frame with counts data.
+#' @name convert.counts.to.matrix
+#' @rdname convert.counts.to.matrix
+#' @param counts data.frame; A data frame with scRNAseq counts data.
 #' @return The counts data.frame coerced into a matrix.
 #' @author Jason Serviss
 #' @examples
 #'
 #' counts <- data.frame(a = runif(26, 1, 100), b = runif(26, 1, 100))
-#' convertCountsToMatrix(counts)
+#' convert.counts.to.matrix(counts)
 #'
 NULL
 #' @export
 
-convertCountsToMatrix <- function(counts) {
+convert.counts.to.matrix <- function(counts) {
   if(class(counts) != "data.frame") {
     stop("Counts is not a data.frame")
   }
   if(!all(sapply(counts, class) %in% c("numeric", "integer"))) {
     stop("Non-numeric columns detected. Should gene names be moved to rownames?")
   }
+  #check that the data.frame has rownames? gene names should be in the rownames
   as.matrix(counts)
 }
 
-#' labelSingletsAndMultiplets
+#' label.singlets.and.multiplets
 #'
 #' Adds the prefix "s." to colnames of columns that contain singlets and "m." to
 #' columns that contain multiplets.
 #'
-#' @name labelSingletsAndMultiplets
-#' @rdname labelSingletsAndMultiplets
+#' @name label.singlets.and.multiplets
+#' @rdname label.singlets.and.multiplets
 #' @param data data.frame or character; A data frame with sample IDs as colnames
 #'  or a vector of sample IDs.
 #' @param ids character; a character vector of regex statments used to indicate
@@ -78,12 +79,12 @@ convertCountsToMatrix <- function(counts) {
 #' @examples
 #'
 #' counts <- data.frame(a = runif(26), b = runif(26), c = runif(26))
-#' labelSingletsAndMultiplets(counts, ids = c("a", "b"))
+#' label.singlets.and.multiplets(counts, ids = c("a", "b"))
 #'
 NULL
 #' @export
 
-labelSingletsAndMultiplets <- function(data, ids) {
+label.singlets.and.multiplets <- function(data, ids) {
   .inputChecks_labelSingletsAndMultiplets(data, ids)
 
   if(class(data) == "data.frame") {
@@ -138,14 +139,14 @@ labelSingletsAndMultiplets <- function(data, ids) {
   }
 }
 
-#' removeHTSEQsuffix
+#' remove.HTSEQ.suffix
 #'
 #' HTSeq adds the suffix ".htseq" to column names when it reports counts. This
-#' function removes that suffix from the column names of the supplied counts
-#' data.frame.
+#' function removes that suffix from the column names.
 #'
-#' @name removeHTSEQsuffix
-#' @rdname removeHTSEQsuffix
+#'
+#' @name remove.HTSEQ.suffix
+#' @rdname remove.HTSEQ.suffix
 #' @param data data.frame or character; A data frame with sample IDs as colnames
 #'  or a vector of sample IDs.
 #' @return The counts data.frame with the ".htseq" suffix removed from the
@@ -154,12 +155,12 @@ labelSingletsAndMultiplets <- function(data, ids) {
 #' @examples
 #'
 #' counts <- data.frame(a.htseq = runif(26), b.htseq = runif(26))
-#' removeHTSEQsuffix(counts)
+#' remove.HTSEQ.suffix(counts)
 #'
 NULL
 #' @export
 
-removeHTSEQsuffix <- function(data) {
+remove.HTSEQ.suffix <- function(data) {
   .inputChecks_removeHTSEQsuffix(data)
   if(class(data) == "data.frame") {
     .dataframeChecks_removeHTSEQsuffix(data)
@@ -190,14 +191,14 @@ removeHTSEQsuffix <- function(data) {
   }
 }
 
-#' detectERCCreads
+#' detect.ERCC.reads
 #'
 #' Detects the 92 ERCC reads in the rownames of the counts data.frame. ERCC
 #' reads must be named with the standard naming convention that matches the
-#' regex "^ERCC\\-[0-9]*$".
+#' regex "^ERCC\\-\\[0-9\\]*$".
 #'
-#' @name detectERCCreads
-#' @rdname detectERCCreads
+#' @name detect.ERCC.reads
+#' @rdname detect.ERCC.reads
 #' @param counts data.frame; A data frame with counts data with gene names as
 #' rownames.
 #' @return A logical vector with length = nrow(counts) that is TRUE when the
@@ -207,12 +208,12 @@ removeHTSEQsuffix <- function(data) {
 #' @examples
 #'
 #' counts <- data.frame(runif(100), row.names = c(1:8, paste0("ERCC-", 1:92)))
-#' detectERCCreads(counts)
+#' detect.ERCC.reads(counts)
 #'
 NULL
 #' @export
 
-detectERCCreads <- function(counts) {
+detect.ERCC.reads <- function(counts) {
   if(class(rownames(counts)) != "character") {
     stop("rownames(counts) is not of class character.")
   }
@@ -223,13 +224,13 @@ detectERCCreads <- function(counts) {
   ercc <- grepl("^ERCC\\-[0-9]*$", rownames(counts))
 
   if(sum(ercc) != 92) {
-    warning("Couldn't detect all ERCC reads.")
+    warning("Couldn't detect all 92 ERCC reads.")
   }
 
   return(ercc)
 }
 
-#' detectNonGenes
+#' detect.non.genes
 #'
 #' HTSeq outputs several "non-genes" in the counts output. These include:
 #' "__no_feature", "__ambiguous", "__too_low_aQual", "__not_aligned",
@@ -237,8 +238,8 @@ detectERCCreads <- function(counts) {
 #' quality and are often undesirable in downstream analysis, this function
 #' detects them in the submitted counts data.frame to allow easy removal.
 #'
-#' @name detectNonGenes
-#' @rdname detectNonGenes
+#' @name detect.non.genes
+#' @rdname detect.non.genes
 #' @param counts data.frame; A data frame with counts data with gene names as
 #' rownames.
 #' @return A logical vector with length = nrow(counts) that is TRUE when the
@@ -247,12 +248,12 @@ detectERCCreads <- function(counts) {
 #' @examples
 #'
 #' counts <- data.frame(runif(10), row.names = c(1:9, "__no_feature"))
-#' detectNonGenes(counts)
+#' detect.non.genes(counts)
 #'
 NULL
 #' @export
 
-detectNonGenes <- function(counts) {
+detect.non.genes <- function(counts) {
   if(class(rownames(counts)) != "character") {
     stop("rownames(counts) is not of class character.")
   }
@@ -272,8 +273,8 @@ detectNonGenes <- function(counts) {
 #'
 #' Reformats wells named e.g. E2 to E02.
 #'
-#' @name reformatWell
-#' @rdname reformatWell
+#' @name reformat.well
+#' @rdname reformat.well
 #' @param names character; A character vector of the old names. Names that are
 #' already in the new nomenclature will not be effected.
 #' @return A character vector of the updated names.
@@ -283,7 +284,7 @@ NULL
 #' @export
 #' @importFrom stringr str_replace str_extract
 
-reformatWell <- function(names){
+reformat.well <- function(names){
   base <- str_replace(names, "(.*)\\.[^\\.]*$", "\\1")
   pos <- paste0(".", str_extract(names, "[^.]+$"))
   posidx <- which(nchar(pos) == 3)

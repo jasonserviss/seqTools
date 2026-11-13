@@ -1,0 +1,53 @@
+---
+title: "normalization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{normalization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup}
+#PACKAGES
+packages <- c("seqTools", "sessioninfo")
+purrr::walk(packages, library, character.only = TRUE)
+rm(packages)
+
+#DATA
+data(testingCounts)
+```
+
+#cpm
+After QC and removal of bad cells/samples, normalize RNA samples/cells to the 
+total counts per million accounting for differences in sequencing depth.
+```{r, fig.align="center", fig.height=10, fig.width=12}
+#setup test data
+rownames(testingCounts) <- testingCounts[[1]]
+testingCounts[[1]] <- NULL
+counts <- testingCounts[2:12, ]
+
+cpm(counts)
+```
+
+#log2(cpm+1)
+log2 transforms scRNAseq counts data in preperation for ...
+```{r}
+cpm.log2(counts)
+```
+
+#rescale.features
+Rescales each gene (row) to the interval [0, 1]. Useful for heatmap plotting,
+for example.
+```{r}
+rescale.features(counts)
+```
+
+#pearsons.dist
+Typically used upstream of tSNE when tSNE can accept a distance matrix.
+```{r}
+pearsons.dist(counts, 1:11)
+```
+
+```{r}
+session_info()
+```
