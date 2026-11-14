@@ -96,28 +96,3 @@ divide_by <- `/`
 
 multiply_by <- `*`
 
-#' col40
-#'
-#' Diverging color palette with 40 colors.
-#'
-#' @name col40
-#' @rdname col40
-#' @author Jason T. Serviss
-#' @keywords col40
-#' @examples
-#'
-#' col40()
-#'
-#' @export
-NULL
-
-col40 <- function() {
-  c(
-  "#1c54a8", "#f63b32", "#00C2A0", "#FFDBE5", "#e0c48c", "#63FFAC", "#663000",
-  "#e0a81c", "#385438", "#609060", "#6A3D9A", "#548495", "#A30059", "#8FB0FF",
-  "#997D87", "#4FC601", "#8ca8c4", "#3B5DFF", "#BA0900", "#DDEFFF", "#7B4F4B",
-  "#A1C299", "#0AA6D8", "#00846F", "#FFB500", "#C2FFED", "#A079BF", "#C0B9B2",
-  "#C2FF99", "#00489C", "#6F0062", "#EEC3FF", "#922329", "#FFF69F", "#FF8A9A",
-  "#B05B6F", "#7900D7", "#BC23FF", "#9B9700", "#0089A3"
-  )
-}

@@ -58,6 +58,25 @@ rescale.features <- function(counts) {
   }))
 }
 
+#' normalize.vector
+#'
+#' Normalizes a vector (x) using x - min(x) / max(x) - min(x).
+#'
+#' @name normalize.vector
+#' @rdname normalize.vector
+#' @author Jason T. Serviss
+#' @param vec numeric; A numeric vector.
+#' @keywords normalize.vector
+#' @examples
+#'
+#' normalize.vector(rnorm(100))
+#'
+#' @export
+
+normalize.vector <- function(vec) {
+  (vec - min(vec)) / (max(vec) - min(vec))
+}
+
 #' Pearsons distance
 #'
 #'

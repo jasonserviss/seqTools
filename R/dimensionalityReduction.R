@@ -1,4 +1,4 @@
-#' runTsne
+#' run.tsne
 #'
 #'
 #' Calculates the x and y coordinates of the mean of each classified group.
@@ -9,9 +9,9 @@
 #' in the supplied unsupervised dimensionality reduction (t-SNE) data
 #' representation.
 #'
-#' @name runTsne
-#' @rdname runTsne
-#' @aliases runTsne
+#' @name run.tsne
+#' @rdname run.tsne
+#' @aliases run.tsne
 #' @param my.dist A distance object typically produced with pearsons.dist.
 #' @param dims Argument to Rtsne. Numeric indicating the output dimensions.
 #' @param theta Argument to
@@ -26,21 +26,20 @@
 #' @param is_distance Argument to
 #'    [Rtsne](https://cran.r-project.org/web/packages/Rtsne/index.html).
 #' @param ... Additional arguments to pass on
-#' @return A matrix containing the mean value for each gene for each
-#'    classification group.
+#' @return A matrix containing the tSNE dimensionally reduced data.
 #' @author Jason T. Serviss
-#' @keywords runTsne
+#' @keywords run.tsne
 #' @examples
-#'
-#' tsne <- runTsne(my.dist, max_iter = 10)
+#' my.dist <- pearsons.dist(testingCounts[, 2:12], 1:14)
+#' tsne <- run.tsne(my.dist, max_iter = 10, perplexity = 2)
 #'
 NULL
 
-#' @rdname runTsne
+#' @rdname run.tsne
 #' @importFrom Rtsne Rtsne
 #' @export
 
-runTsne <- function(
+run.tsne <- function(
   my.dist, dims = 2, theta = 0, initial_dims = 50, max_iter = 2000,
   perplexity = 10, seed = 11, is_distance = TRUE, ...
 ){
