@@ -17,6 +17,15 @@ Imports:
     dplyr,
     tidyr,
     stringr,
-    rlang
+    rlang,
+    Rtsne,
+    caret,
+    e1071,
+    future.apply,
+    matrixStats,
+    purrr,
+    readr,
+    uwot
 VignetteBuilder: knitr
 Depends: R (>= 4.6)
+LazyData: true

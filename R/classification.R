@@ -50,6 +50,8 @@ foldChangePerClass <- function(counts, classes) {
 #' @aliases enrichmentScore
 #' @param cpm matrix; Matrix containing cpm values.
 #' @param classes Character; Classes corresponding to columns in cpm argument.
+#' @param e1 numeric; enrichment variable 1
+#' @param e2 numeric; enrichment variable 2
 #' @return Returns the a list of enrichment scores with one element per
 #' classification.
 #' @author Jason T. Serviss

@@ -1,7 +1,7 @@
 
 data(testingCounts)
 
-test_that("check that the filter.counts.data function returns the correct output with expected data", {
+test_that("check that the qc.counts.data function returns the correct output with expected data", {
 
   ##prepare input where the list elements and the vector elements are named
   counts <- testingCounts[1:13, ]
@@ -20,7 +20,7 @@ test_that("check that the filter.counts.data function returns the correct output
   )
   
   ##run function
-  output <- filter.counts.data(counts, ercc,
+  output <- qc.counts.data(counts, ercc,
     gene.min.count = 0,
     cell.min.count = 1,
     gene.name = "ACTB",

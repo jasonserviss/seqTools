@@ -26,7 +26,9 @@ move.genes.to.rownames <- function(counts) {
     stop("Counts is not a data.frame")
   }
   if(!is.character(counts[[1]])) {
-    stop("The first column of counts is not class character.")
+      if(!is.factor(counts[[1]])) {
+          stop("The first column of counts is not class character or factor.")
+      }
   }
   rownames(counts) <- counts[[1]]
   counts[[1]] <- NULL
@@ -51,7 +53,7 @@ NULL
 #' @export
 
 convert.counts.to.matrix <- function(counts) {
-  if(class(counts) != "data.frame") {
+  if(!is.data.frame(counts)) {
     stop("Counts is not a data.frame")
   }
   if(!all(sapply(counts, class) %in% c("numeric", "integer"))) {
@@ -87,7 +89,7 @@ NULL
 label.singlets.and.multiplets <- function(data, ids) {
   .inputChecks_labelSingletsAndMultiplets(data, ids)
 
-  if(class(data) == "data.frame") {
+  if(is.data.frame(data)) {
 
     .dataframeChecks_labelSingletsAndMultiplets(data)
     bool <- sapply(ids, function(x) grepl(x, colnames(data)))
@@ -113,11 +115,13 @@ label.singlets.and.multiplets <- function(data, ids) {
 }
 
 .inputChecks_labelSingletsAndMultiplets <- function(data, ids) {
-  if(class(ids) != "character") {
+  if(!is.character(ids)) {
     stop("The id argument must be a character vector.")
   }
-  if(!class(data) %in% c("data.frame", "character")) {
-    stop("The data argument must be a character vector or data.frame.")
+  if(!is.data.frame(data)) {
+      if(!is.character(data)) {
+          stop("The data argument must be a character vector or data.frame.")
+      }
   }
   if(any(is.na(ids))) {
     stop("The ids argument contains NA values.")
@@ -129,7 +133,7 @@ label.singlets.and.multiplets <- function(data, ids) {
     stop("is.null(colnames(data)) returned TRUE.")
   }
   if(!all(sapply(data, class) %in% c("numeric", "integer"))) {
-    stop("Non-numeric columns detected. Should gene names be moved to rownames?")
+    stop("Non-numeric columns detected. Gene names moved to rownames?")
   }
 }
 
@@ -162,20 +166,22 @@ NULL
 
 remove.HTSEQ.suffix <- function(data) {
   .inputChecks_removeHTSEQsuffix(data)
-  if(class(data) == "data.frame") {
+  if(is.data.frame(data)) {
     .dataframeChecks_removeHTSEQsuffix(data)
     colnames(data) <- gsub("(.*)\\.htseq$", "\\1", colnames(data))
     return(data)
   }
-  if(class(data) == "character") {
+  if(is.character(data)) {
     data <- gsub("(.*)\\.htseq$", "\\1", data)
     return(data)
   }
 }
 
 .inputChecks_removeHTSEQsuffix <- function(data) {
-  if(!class(data) %in% c("data.frame", "character")) {
-    stop("The data argument must be a character vector or data.frame.")
+  if(!is.data.frame(data)) {
+      if(!is.character(data)) {
+          stop("The data argument must be a character vector or data.frame.")
+      }
   }
 }
 
@@ -214,7 +220,7 @@ NULL
 #' @export
 
 detect.ERCC.reads <- function(counts) {
-  if(class(rownames(counts)) != "character") {
+  if(!is.character(rownames(counts))) {
     stop("rownames(counts) is not of class character.")
   }
   if(all(rownames(counts) == as.character(1:nrow(counts)))) {
@@ -254,7 +260,7 @@ NULL
 #' @export
 
 detect.non.genes <- function(counts) {
-  if(class(rownames(counts)) != "character") {
+  if(!is.character(rownames(counts))) {
     stop("rownames(counts) is not of class character.")
   }
   if(all(rownames(counts) == as.character(1:nrow(counts)))) {

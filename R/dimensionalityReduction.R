@@ -62,14 +62,21 @@ run.tsne <- function(
 #' @name run.umap
 #' @rdname run.umap
 #' @aliases run.umap
-#' @param my.dist A distance object typically produced with pearsons.dist.
+#' @param cpm matrix; Counts per million
+#' @param n_neighbors numeric; Argument to
+#'    [uwot](https://cran.r-project.org/web/packages/uwot/index.html).
+#' @param min_dist numeric; Argument to
+#'    [uwot](https://cran.r-project.org/web/packages/uwot/index.html).
+#' @param metric character; Argument to
+#'    [uwot](https://cran.r-project.org/web/packages/uwot/index.html).
+#' @param seed integer; seed to set via set.seed
 #' @param ... Additional arguments to pass on
-#' @return
+#' @return A matrix with the UMAP mappings
 #' @author Jason T. Serviss
 #' @keywords run.umap
 #' @examples
 #'
-#' tsne <- run.umap(my.dist, max_iter = 10)
+#' tsne <- run.umap(testingCounts[, 2:12], max_iter = 10, n_neighbors = 5)
 #'
 NULL
 
@@ -78,7 +85,7 @@ NULL
 #' @export
 
 run.umap <- function(
-  cpm, n_neighbors = 30, min_dist = 0.3, metric = "euclidean", ...
+  cpm, n_neighbors = 30, min_dist = 0.3, metric = "euclidean", seed = 11, ...
 ){
   set.seed(seed)
   #alternative method to run umap on principal components?

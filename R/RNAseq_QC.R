@@ -1,12 +1,12 @@
-#' filter.counts.data
+#' qc.counts.data
 #'
 #' This is a wrapper function for \code{\link{detect.low.quality.genes}},
 #' \code{\link{detect.lqc_total.counts}},
 #' \code{\link{detect.lqc_ERCC.frac}},
 #' \code{\link{detect.lqc_housekeeping}}
 #'
-#' @name filter.counts.data
-#' @rdname filter.counts.data
+#' @name qc.counts.data
+#' @rdname qc.counts.data
 #' @param counts data.frame; The counts data.
 #' @param counts.ERCC data.frame; The counts ERCC data.
 #' @param filters Character; A vector indicating the types of filtering to be
@@ -25,7 +25,7 @@
 NULL
 #' @export
 
-filter.counts.data <- function(
+qc.counts.data <- function(
     counts, counts.ERCC,
     filters = c("genes", "total.counts", "ERCC.frac", "housekeeping"),
     gene.min.count, cell.min.count, gene.name, quantile.cut.hk,
@@ -50,7 +50,8 @@ filter.counts.data <- function(
   }
 
   if("ERCCfrac" %in% filters) {
-    lqc.ERCC.frac <- detect.lqc_ERCC.frac(counts, countsERCC,
+
+    lqc.ERCC.frac <- detect.lqc_ERCC.frac(counts = counts, ercc = countsERCC,
       quantile.cut = quantile.cut.ercc
     )
   }
@@ -64,9 +65,9 @@ filter.counts.data <- function(
   ))
 
   c <- c[, lqc]
-  counts.ERCC <- counts.ERCC[, lqc]
+  ce <- counts.ERCC[, lqc]
 
-  return(list(c, counts.ERCC))
+  return(list(c, ce))
 }
 
 
@@ -205,7 +206,7 @@ detect.lqc_total.counts <- function(
 #' y <- runif(2e4, 1.5, 100)
 #' names <- paste0(letters, 1:2e4)
 #' counts <- data.frame(a = x, b = y, c = y, row.names = names)
-#' detect.lqc_housekeeping(counts, geneName = "a1")
+#' detect.lqc_housekeeping(counts, gene.name = "a1")
 #'
 NULL
 #' @export
@@ -276,13 +277,7 @@ detect.lqc_housekeeping <- function(
 #' counts data.frame column contains a sample with meeting the criteria
 #' specified by the arguments.
 #' @author Jason Serviss
-#' @examples
-#' set.seed(8292)
-#' x <- runif(2e4)
-#' y <- runif(2e4, 1.5, 100)
-#' names <- paste0(letters, 1:2e4)
-#' counts <- data.frame(a = x, b = y, c = y, row.names = names)
-#' detect.lqc_ERCC.frac(counts, ercc = )
+#'
 #'
 NULL
 #' @export

@@ -11,13 +11,14 @@
 #'  rownames(counts).
 #' @param ... additional arguments to pass on.
 #' @keywords coloursFromTargets
+#' @export
 NULL
 
 #' @rdname coloursFromTargets
 #' @importFrom dplyr group_by ungroup mutate arrange summarize select if_else n
 #' @importFrom rlang .data
-#' @importFrom tibble tibble add_column
-#' @importFrom tidyr gather unnest spread
+#' @importFrom tibble tibble
+#' @importFrom tidyr pivot_longer unnest_longer pivot_wider
 #' @importFrom purrr pmap pmap_chr
 #' @importFrom grDevices col2rgb rgb
 #' @importFrom readr parse_factor
@@ -25,7 +26,7 @@ NULL
 coloursFromTargets <- function(
   pal, counts, markers, ...
 ){
-  
+
   if(is.null(markers) | is.null(pal) | length(markers) == 1) {
     return(tibble('Sample' = colnames(counts)))
   }
@@ -35,11 +36,11 @@ coloursFromTargets <- function(
     mess <- paste0("The following genes have 0 counts for all samples ", g)
     stop(mess)
   }
-  
+
   markers <- sort(markers)
   pal <- pal[1:length(markers)]
-  
-  counts[rownames(counts) %in% markers, ] |>
+
+  normalized <- counts[rownames(counts) %in% markers, ] |>
   matrix_to_tibble(data = _, rowname = 'geneName', drop = FALSE) |>
   pivot_longer(
     cols = !.data$geneName, names_to = 'Sample', values_to = 'count'
@@ -47,33 +48,49 @@ coloursFromTargets <- function(
   #normalize
   group_by(.data$geneName) |>
   mutate('normalized' = normalize.vector(.data$count)) |>
-  ungroup() |>
+  ungroup()
+
   #calculate fraction
+  fractions <- normalized |>
   group_by(.data$Sample) |>
   mutate('fraction' = .data$normalized / sum(.data$normalized)) |>
   mutate(
     'fraction' = if_else(is.nan(.data$fraction), 1 / n(), .data$fraction)
-  ) |>
+  )
+
   #setup initial hex colors
+  ihex <- fractions |>
   arrange(.data$geneName) |>
   mutate('colint' = pal) |>
-  ungroup() |>
+  ungroup()
+
   #convert to rgb and calculate new colors
-  mutate('rgb' = pmap(
-    list(.data$colint, .data$normalized, .data$fraction),
-    function(x, y, z)  {
-     mat <- as.vector((255 - ((255 - col2rgb(x)) * y)) * z)
-     names(mat) <- c("r", "g", "b")
-     mat
-    }
-  )) |>
-  unnest_longer(col = c(.data$rgb), values_to = "rgb", indices_to = "col") |>
-  group_by(.data$Sample, .data$col) |>
-  summarize('sumRGB' = sum(.data$rgb) / 256, .groups = "drop_last") |>
-  ungroup() |>
-  pivot_wider(names_from=col, values_from = sumRGB) |>
+  one <- ihex|>
+    mutate('rgb' = pmap(list(colint), function(x)  {col2rgb(x)})) |>
+    mutate('rgb2' = pmap(list(rgb), function(x)  {255 - x})) |>
+    mutate('rgb3' = pmap(list(rgb2, normalized), function(x, y)  {x * y})) |>
+    mutate('rgb4' = pmap(list(rgb3), function(x) {
+      calc <- 255 - x
+      calc <- as.vector(calc)
+      names(calc) <- c("r", "g", "b")
+      calc
+    })) |>
+    select(-rgb, -rgb2, -rgb3) |>
+    rename(rgb = rgb4) |>
+    unnest_longer(col = c(.data$rgb), values_to = "rgb", indices_to = "col")
+
+  two <- one |>
+    mutate(adjrgb = rgb * fraction) |>
+    group_by(.data$Sample, .data$col) |>
+    summarize('sum.rgb' = sum(.data$adjrgb), .groups = "keep") |>
+    ungroup() |>
+    mutate(sum.rgb.adj = sum.rgb / 256) |>
+    select(-sum.rgb) |>
+    pivot_wider(names_from = .data$col, values_from = .data$sum.rgb.adj)
+
   #convert back to hex
-  mutate('Colour' = pmap_chr(
+  three <- two |>
+    mutate('Colour' = pmap_chr(
     list(.data$r, .data$g, .data$b),
     function(x, y, z) rgb(red = x, green = y, blue = z)
   )) |>
@@ -84,6 +101,7 @@ coloursFromTargets <- function(
     .data$Colour,
     levels = unique(c(.data$Colour, pal[!pal %in% .data$Colour]))
   ))
+  return(three)
 }
 
 #' col40

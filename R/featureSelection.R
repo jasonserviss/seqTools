@@ -79,6 +79,7 @@ NULL
 
 #' @importFrom e1071 svm
 #' @importFrom matrixStats rowMeans2 rowSds
+#' @importFrom stats predict
 
 nTopDeltaCV <- function(counts, n, rm = 0) {
   valid <- matrixStats::rowSums2(counts) > rm

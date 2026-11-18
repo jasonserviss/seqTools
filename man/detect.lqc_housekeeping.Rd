@@ -35,7 +35,7 @@ x <- runif(2e4)
 y <- runif(2e4, 1.5, 100)
 names <- paste0(letters, 1:2e4)
 counts <- data.frame(a = x, b = y, c = y, row.names = names)
-detect.lqc_housekeeping(counts, geneName = "a1")
+detect.lqc_housekeeping(counts, gene.name = "a1")
 
 }
 \author{
